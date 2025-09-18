@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+
+    <link href="../Cesium/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <link href="Style.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="cesiumContainer"></div>
+<div class="cesium-viewer-toolbar"></div>
+<div id="buttonDiv"></div>
+<div id="buttonNavigation"></div>
+<script src="../Cesium/Build/Cesium/Cesium.js"></script>
+<script src="../LasCruces/milsymbol/node_modules/milsymbol/dist/milsymbol.js"></script>
+
+
+<script>
+
+    // Your access token can be found at: https://ion.cesium.com/tokens.
+    // This is the default access token from your ion account
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxMmM0MTUwOC05NmY0LTQwMTItYWIzOC1iMzc1NDE3NTA1NGUiLCJpZCI6MTY4ODk5LCJpYXQiOjE2OTU4MjI1NTF9.Z-ZN9FQT2U6ePjubwL12ErbDwMOxmftWD2gVvZXT_9Q';
+
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+        baseLayerPicker: false,
+        animation: false,
+        timeline: false,
+        sceneMode: false
+    });
+    const lasCrucesDowntown = viewer.entities.add({
+        polygon: {
+            hierarchy: Cesium.Cartesian3.fromDegreesArray([
+                -106.78155502464388, 32.30548112792002,  // (Northwest corner)
+                -106.77877131812703, 32.30406519916078,  // (Southwest corner)
+                 -106.77796751323224, 32.304302447945574, //(Southeast corner)
+                 -106.77806320429052, 32.305887685224654, //(Northeast corner)
+            ]),
+            height: 0,
+            material: Cesium.Color.RED.withAlpha(0.2),
+            outline: true,
+            outlineColor: Cesium.Color.BLACK,
+        },
+    });
+
+    // Fly the camera to Las Cruces at the given longitude, latitude, and height.
+    const opentopomapTransportProvider = new Cesium.UrlTemplateImageryProvider({
+     //   url: 'https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=9b491be8232441c8bbbca3e335a79bbb',
+        url: 'https://b.tile.opentopomap.org/{z}/{x}/{y}.png',
+        credit: 'Map data © Thunderforest, © OpenStreetMap contributors',
+        maximumLevel: 16 // Set the maximum level of detail as needed.
+    });
+
+    // Create an imagery layer using the Thunderforest Transport tile provider.
+    const transportLayer = viewer.scene.imageryLayers.addImageryProvider(opentopomapTransportProvider);
+
+    // Optionally, you can set layer properties like opacity and visibility.
+    transportLayer.alpha = 1.0; // Set the opacity (0.0 to 1.0).
+    transportLayer.show = true; // Show the layer.
+    viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(30.52380000, 50.45466000, 10000),
+        orientation: {
+            heading: Cesium.Math.toRadians(0.0),
+            pitch: Cesium.Math.toRadians(-90.0),
+        }
+    });
+    //Tower entity
+    // const lcStartingPoint = viewer.entities.add({
+    //
+    //     name: "Starting Point, Wells Fargo Building",
+    //     position: Cesium.Cartesian3.fromDegrees( -106.77861221981614, 32.30526482854694),
+    //     point: {
+    //         pixelSize: 5,
+    //         color: Cesium.Color.RED,
+    //         OutlineColor: Cesium.Color.WHITE,
+    //         outlineWidth: 2,
+    //     },
+    //     label: {
+    //         text: "Las Cruces Tower",
+    //         font: "14pt monospace",
+    //         style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+    //         outlineWidth: 2,
+    //         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+    //         pixelOffset: new Cesium.Cartesian2(0, -9),
+    //     }
+    //     }
+    //
+    //
+    //
+    // )
+
+
+
+
+
+
+
+
+</script>
+    <script type="module" src="app.js"></script>
+    <script type="module" src="datafeeds.js"></script>
+</body>
+</html>

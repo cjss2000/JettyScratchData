@@ -1,0 +1,21 @@
+const hospitalCode = '30030100001100000000';
+const symbolDetails = {
+    width: 40,
+    height: 30,
+};
+
+const enemySuspectData =
+    [
+        {
+            "name": "Friendly Air 1",
+            "latitude": 32.3055394,
+            "longitude": -106.7810804,
+            "GUID": 0001
+        },
+        {
+            "name": "Friendly Air 2",
+            "latitude": 32.2845067,
+            "longitude": -106.7570416,
+            "GUID": 0002
+        }
+    ]; 
