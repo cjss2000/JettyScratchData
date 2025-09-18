@@ -1,0 +1,21 @@
+package jettyService;
+
+public class Global {
+
+public static TrackRepo tracks = new TrackRepo();
+//public static UnitMover unitMover = new UnitMover(32.305969917912826, -106.77802176389179);
+    public static UnitMover unitMover = new UnitMover();
+
+    static {
+ unitMover.printAirtracks();
+}
+public static void startUnitMover(){
+    unitMover.start();
+}
+
+public static void stopUnitMover() {
+    if (unitMover != null) {
+        unitMover.stopRunning();
+    }
+}
+}
