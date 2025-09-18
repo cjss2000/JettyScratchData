@@ -1,0 +1,35 @@
+package jettyService;
+
+import org.eclipse.jetty.server.Server;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class TCPHandler {
+    public static void main(String[] args) {
+        int port = 12345;
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("TCP Server is listening on port " + port);
+
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                new Thread(() -> handleTcpConnection(clientSocket)).start();
+                System.out.println("LIstening");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void handleTcpConnection(Socket clientSocket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+            String inputData = in.readLine();
+            System.out.println("Received TCP data: " + inputData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
