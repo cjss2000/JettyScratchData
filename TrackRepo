@@ -1,0 +1,101 @@
+package jettyService;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class TrackRepo {
+
+    JSONArray tracks = new JSONArray();
+    JSONArray airTracks = new JSONArray();
+
+    public TrackRepo() {
+        String jsconContent = null;
+        try {
+            jsconContent = new String (Files.readAllBytes(Paths.get("C:\\temp\\jetty-base\\webapps\\LasCruces\\DataFeed\\legacydata.json")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Pattern datePattern = Pattern.compile("\\{\\s*\"latitude\"\\s*:\\s*\\d+\\.\\d+\\s*,\\s*\"name\"\\s*:\\s*\"\\[24/(0[34])/\\d{2}\\]\\s*Ru Position\"\\s*,\\s*\"longitude\"\\s*:\\s*\\d+\\.\\d+\\s*\\}");
+
+        Matcher matcher = datePattern.matcher(jsconContent);
+
+
+        while (matcher.find()) {
+            int startIndex = matcher.start();
+            int endIndex = jsconContent.indexOf("}", startIndex) + 1;
+            if (endIndex <= startIndex) {
+                continue;
+            }
+
+            String jsonObjectString = jsconContent.substring(startIndex, endIndex);
+            // out.println(jsonObject);
+
+            try {
+                JSONObject jsonObject = new JSONObject(jsonObjectString);
+                tracks.put(jsonObject);
+            } catch (org.json.JSONException e) {
+                System.err.println("Invalid JSON Object: " + jsonObjectString);
+            }
+        }
+
+    }
+
+    public JSONArray getTracks() {
+        return tracks;
+    }
+
+    public JSONArray getAirTracks(){
+        return airTracks;
+    }
+
+    public void randomizeTracks(int knt){
+
+        int trackCount = tracks.length();
+
+        for (int i = 0; i < knt; i++){
+            int trackIndex = (int)(Math.random() * trackCount);
+           // System.out.println(tracks.getJSONObject(trackIndex).toString());
+            JSONObject track = tracks.getJSONObject(trackIndex);
+            double lat = track.getDouble("latitude");
+            double lon = track.getDouble("longitude");
+
+            double dlat = (double)((Math.random()  / 10.0) - 0.05 );
+
+            double dlon = (double)((Math.random() / 10.0) - 0.05);
+
+            lat = lat + dlat;
+            lon = lon + dlon;
+
+            if (lon > 180.0) {
+                lon = 180.0;
+            }
+            if (lon < -180.0) {
+                lon = -180.0;
+            }
+            if (lat > 90.0) {
+                lat = 90.0;
+            }
+            if (lat < -90.0) {
+                lat = -90.0;
+            }
+
+            track.remove("latitude");
+            track.remove("longitude");
+            track.put("latitude", lat);
+            track.put("longitude", lon);
+
+            tracks.put(trackIndex,track);
+
+        }
+
+    }
+
+
+}
