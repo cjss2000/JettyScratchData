@@ -1,0 +1,19 @@
+package jettyService;
+
+public class Trackupdate extends Thread {
+    Boolean running = true;
+
+    public void run() {
+        while (running) {
+
+            //System.out.println("I'm running " + System.nanoTime());
+            try {
+                Thread.sleep(2000);
+                Global.tracks.randomizeTracks(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+}
